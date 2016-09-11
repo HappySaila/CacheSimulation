@@ -5,11 +5,9 @@
 public abstract class Cache {
 //    parent of all cache objects
     private int numberBlocks;
-    private int blockSize;
-    private boolean l2Cache; //true if L-2 cache is present
+    private Block[] cache;
 
-    public void getData(String data){
-        //will
+    public Cache(int numberBlocks) {
+        cache = new Block[numberBlocks];
     }
-
 }

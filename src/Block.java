@@ -2,17 +2,21 @@
  * Created by HappySaila on 2016/09/09.
  */
 public class Block {
-    private int label;
     private int tag;
-    private boolean valid;
+    private int index;
     private String data;
+    private boolean valid;
 
-    public Block(int label, int tag, boolean valid, String data) {
-        this.label = label;
+    public Block(int tag, int index, boolean valid) {
         this.tag = tag;
         this.valid = valid;
-        this.data = data;
+        this.index = index;
     }
+
+    public boolean isEqual(Block block){
+        return this.tag==block.tag;
+    }
+
 
 
 }
