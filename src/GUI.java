@@ -48,7 +48,7 @@ public class GUI {
         setFont(label);
         frame.add(label, BorderLayout.WEST);
 
-        caches.addItem("Empty");
+        caches.addItem("No Cache");
         caches.addItem("Single: 16 blocks and 16 bytes / block");
         caches.addItem("Single: 16 blocks and 32 bytes / block");
         caches.addItem("Double: L1: 16 blocks and 16 bytes / block; L2: 64 blocks, 64 bytes / block");
@@ -57,7 +57,7 @@ public class GUI {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange()==ItemEvent.SELECTED){
-                    if (e.getItem().equals("Empty")){
+                    if (e.getItem().equals("No Cache")){
                         cacheSetup = 0;
                     }else if (e.getItem().equals("Single: 16 blocks and 16 bytes / block")){
                         cacheSetup = 1;
@@ -95,66 +95,66 @@ public class GUI {
             @Override
             public void actionPerformed(ActionEvent e) {
 //                start simulation
-                if (results!=null){
+                if (results != null) {
                     results.dispose();
                 }
-                String file = "src/Instructions/"+fileName;
-                if (cacheSetup!=0){
-                    switch (cacheSetup){
-                        case 1:
-                            cache = new Cache(16,16);
-                            cpu = new CPU(cache, file);
-                            break;
-                        case 2:
-                            cache = new Cache(16, 32);
-                            cpu = new CPU(cache, file);
-                            break;
-                        case 3:
-                            cache = new Cache(16,16);
-                            cache2 = new Cache(64,64);
-                            cpu = new CPU(cache, cache2, file);
-                            break;
-                        case 4:
-                            cache = new Cache(8, 32);
-                            cache2 = new Cache(64,64);
-                            cpu = new CPU(cache, cache2, file);
-                    }
-//                    open window showing results
-                    results = new JFrame("Results");
-                    GridLayout gridLayout = new GridLayout(5,1);
-                    results.setLayout(gridLayout);
-                    if (cacheSetup==1 || cacheSetup==2){
-                        JLabel fileL = new JLabel("File: "+fileName);
-                        JLabel hitsL = new JLabel("Hits: "+cpu.l1Hit);
-                        JLabel missL = new JLabel("Misses: "+cpu.miss);
-                        JLabel costL = new JLabel("Total Cycle Cost: "+cpu.getCost());
-                        results.add(fileL, gridLayout);
-                        results.add(hitsL, gridLayout);
-                        results.add(missL, gridLayout);
-                        results.add(costL, gridLayout);
-                    }
-                    else if (cacheSetup==3 || cacheSetup ==4){
-                        JLabel fileL = new JLabel("File: "+fileName);
-                        JLabel l1hitsL = new JLabel("L1Hits: "+cpu.l1Hit);
-                        JLabel l2hitsL = new JLabel("L2Hits: "+cpu.l2Hit);
-                        JLabel missL = new JLabel("Misses: "+cpu.miss);
-                        JLabel costL = new JLabel("Total Cycle Cost: "+cpu.getCost());
-                        results.add(fileL, gridLayout);
-                        results.add(l1hitsL, gridLayout);
-                        results.add(l2hitsL, gridLayout);
-                        results.add(missL, gridLayout);
-                        results.add(costL, gridLayout);
-                    }
-                    results.pack();
-                    results.setVisible(true);
-
+                String file = "src/Instructions/" + fileName;
+                switch (cacheSetup) {
+                    case 0:
+                        cpu = new CPU(file);
+                        break;
+                    case 1:
+                        cache = new Cache(16, 16);
+                        cpu = new CPU(cache, file);
+                        break;
+                    case 2:
+                        cache = new Cache(16, 32);
+                        cpu = new CPU(cache, file);
+                        break;
+                    case 3:
+                        cache = new Cache(16, 16);
+                        cache2 = new Cache(64, 64);
+                        cpu = new CPU(cache, cache2, file);
+                        break;
+                    case 4:
+                        cache = new Cache(8, 32);
+                        cache2 = new Cache(64, 64);
+                        cpu = new CPU(cache, cache2, file);
                 }
+//                    open window showing results
+                results = new JFrame("Results");
+                GridLayout gridLayout = new GridLayout(5, 1);
+                results.setLayout(gridLayout);
+                if (cacheSetup == 1 || cacheSetup == 2 || cacheSetup == 0) {
+                    JLabel fileL = new JLabel("File: " + fileName);
+                    JLabel hitsL = new JLabel("Hits: " + cpu.l1Hit);
+                    JLabel missL = new JLabel("Misses: " + cpu.miss);
+                    JLabel costL = new JLabel("Total Cycle Cost: " + cpu.getCost());
+                    results.add(fileL, gridLayout);
+                    results.add(hitsL, gridLayout);
+                    results.add(missL, gridLayout);
+                    results.add(costL, gridLayout);
+                } else if (cacheSetup == 3 || cacheSetup == 4) {
+                    JLabel fileL = new JLabel("File: " + fileName);
+                    JLabel l1hitsL = new JLabel("L1Hits: " + cpu.l1Hit);
+                    JLabel l2hitsL = new JLabel("L2Hits: " + cpu.l2Hit);
+                    JLabel missL = new JLabel("Misses: " + cpu.miss);
+                    JLabel costL = new JLabel("Total Cycle Cost: " + cpu.getCost());
+                    results.add(fileL, gridLayout);
+                    results.add(l1hitsL, gridLayout);
+                    results.add(l2hitsL, gridLayout);
+                    results.add(missL, gridLayout);
+                    results.add(costL, gridLayout);
+                }
+                results.pack();
+                results.setVisible(true);
+
                 Cache cache = new Cache(16, 16);
                 Cache l2cache = new Cache(64, 32);
                 //will create the cpu and call all the instructions
                 //all hits, misses and cost will be saved in the cpu object
-                CPU cpu = new CPU(cache,l2cache, file);
-                System.out.println("l1Hits:"+cpu.l1Hit+"\nl2Hits:"+cpu.l2Hit+"\nMisses:"+cpu.miss);
+                CPU cpu = new CPU(cache, l2cache, file);
+//                System.out.println("l1Hits:" + cpu.l1Hit + "\nl2Hits:" + cpu.l2Hit + "\nMisses:" + cpu.miss); Debug
             }
         });
         frame.add(start, BorderLayout.EAST);

@@ -33,6 +33,11 @@ public class CPU {
         isL2Cache = false;
         readData(file);
     }
+
+    public CPU(String file){
+        readData(file);
+        miss = data.size();
+    }
     //endregion
 
     //region methods
@@ -47,12 +52,13 @@ public class CPU {
         while(sc.hasNext()){
             data.add(Utils.toDecimal(sc.nextLine()));//convert the hex value to a decimal
         }
-        for (int i : data) {
-            System.out.println(i);
-            if(isL2Cache){
-                handleL2(i);
-            }else{
-                handleL1(i);
+        if (l1Cache!=null){
+            for (int i : data) {
+                if(isL2Cache){
+                    handleL2(i);
+                }else{
+                    handleL1(i);
+                }
             }
         }
     }
