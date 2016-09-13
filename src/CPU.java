@@ -87,6 +87,10 @@ public class CPU {
             l1Cache.setBlock(i);
         }
     }
+
+    public int getCost(){
+        return (l1Hit*10+l2Hit*100+miss*1000)/(l1Hit+l2Hit+miss);
+    }
     //endregion
 
 }

@@ -17,7 +17,7 @@ public class Cache {
     public boolean hasVal(int i){
 //        will return true if the value is in the cache
         int index = i%numberBlocks;
-        int offset = (i%bytes)/bytes;
+        int offset = (i/numberBlocks)%bytes;
         Integer value = cache[index][offset];
         if (cache[index][offset]!=null){//checking if there is  value in that block
             if(value==i){
@@ -27,15 +27,9 @@ public class Cache {
         return false;
     }
 
-    public int getBlock(int value){
-        int index = value%numberBlocks;
-        int offset = (value%bytes)/bytes;
-        return cache[index][offset];
-    }
-
     public void setBlock(int i){
         int index = i%numberBlocks;
-        int offset = (i%bytes)/bytes;
+        int offset = (i/numberBlocks)%bytes;
         cache[index][offset]=i;
     }
 }
