@@ -1,32 +1,92 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Scanner;
+
 /**
  * Created by HappySaila on 2016/09/10.
  * WLSGRA012
  */
 public class CPU {
     //will generate numbers and look call for them
-    private Cache cache;
+
+    //region instantiate
+    private Cache l1Cache;
     private Cache l2Cache;
     private boolean isL2Cache;
-    private int hit = 0;
-    private int cacheMiss = 0;
-    private int l2CacheMiss = 0;
+    public int l1Hit = 0;
+    public int l2Hit = 0;
+    public int miss = 0;
+    private ArrayList<Integer> data = new ArrayList<>();
+    //endregion
 
-    public CPU(Cache cache, Cache l2Cache) {
-        this.cache = cache;
+    //region constructors
+    public CPU(Cache l1Cache, Cache l2Cache, String file) {
+        this.l1Cache = l1Cache;
         this.l2Cache = l2Cache;
         isL2Cache = true;
+        readData(file);
     }
 
-    public CPU(Cache cache) {
-        this.cache = cache;
+    public CPU(Cache cache, String file) {
+        this.l1Cache = cache;
         isL2Cache = false;
+        readData(file);
+    }
+    //endregion
+
+    //region methods
+
+    private void readData(String file){
+        Scanner sc = null;
+        try {
+            sc = new Scanner(new File(file));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        while(sc.hasNext()){
+            data.add(Utils.toDecimal(sc.nextLine()));//convert the hex value to a decimal
+        }
+        for (int i : data) {
+            System.out.println(i);
+            if(isL2Cache){
+                handleL2(i);
+            }else{
+                handleL1(i);
+            }
+        }
     }
 
-    public void get(String hex){
-        //convert hex to decimal
-        //check cache
-        //check l2Cache
+    private void handleL2(int i){
+        //will increment hits and misses accordingly and manage caches accordingly
+        if (l1Cache.hasVal(i)){
+            l1Hit++;
+        }
+        else if (l2Cache.hasVal(i)){
+            l2Hit++;
+//          copy value from l2cache to l1 cache
+            l1Cache.setBlock(i);
+        }
+        else{
+            //value is not in cache and needs to be copied from RAM
+            miss++;
+//          put value in both caches
+            l1Cache.setBlock(i);
+            l2Cache.setBlock(i);
+        }
     }
-
+    private void handleL1(int i){
+        //will increment hits and misses accordingly and manage caches accordingly
+        if (l1Cache.hasVal(i)){
+            l1Hit++;
+        }
+        else{
+            //value is not in cache and needs to be copied from RAM
+            miss++;
+//          put value in both caches
+            l1Cache.setBlock(i);
+        }
+    }
+    //endregion
 
 }
